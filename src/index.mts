@@ -1,4 +1,7 @@
 import express from "express";
+import type { Todo } from "./models/Todo.mjs";
+
+const todos: Todo[] = [];
 
 const app = express();
 
