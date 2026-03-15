@@ -1,16 +1,9 @@
 import express from "express";
-import { Todo } from "./models/Todo.mjs";
-
-const todos: Todo[] = [
-  new Todo(1, "learn express"),
-  new Todo(2, "learn routes"),
-];
+import { todoRouter } from "./routes/todoRouter.mjs";
 
 const app = express();
 
-app.get("/", (_, res) => {
-  res.status(200).json(todos);
-});
+app.use("/todos", todoRouter);
 
 app.listen(3000, (error: Error) => {
   if (error) {
