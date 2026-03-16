@@ -7,14 +7,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1", 
-    "dev": "npx tsc watch src/index.mts"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tsx watch src/index.mts"
   },
   "dependencies": {
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "@types/express": "github:types/express",
+    "@types/express": "^5.0.6",
     "typescript": "^5.9.3"
   }
 }

@@ -1,11 +1,13 @@
-import express from "express";
+import express, { json } from "express";
 import { todoRouter } from "./routes/todoRouter.mjs";
 
 const app = express();
 
+app.use(json());
+
 app.use("/todos", todoRouter);
 
-app.listen(3000, (error: Error) => {
+app.listen(3000, (error) => {
   if (error) {
     console.log(error);
   } else {
