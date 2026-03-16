@@ -56,3 +56,26 @@ todoRouter.post("/", (req, res) => {
     } satisfies ApiErrorResponse);
   }
 });
+
+todoRouter.delete("/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const index = todos.findIndex((t) => t.id === +id);
+
+    if (index >= 0) {
+      todos.splice(index, 1);
+      res.status(204).json();
+    } else {
+      res.status(400).json({ message: "Can not find todo with id:" + id });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+      stacktrace: error,
+    } satisfies ApiErrorResponse);
+  }
+});
+
+todoRouter.put("/:id", (req, res) => {});
