@@ -13,6 +13,7 @@ todoRouter.get("/", async (_, res) => {
   try {
     res.status(200).json(todos);
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "Internal server error",
       stacktrace: error,
@@ -33,6 +34,7 @@ todoRouter.get("/:id", (req, res) => {
       });
     }
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "Internal server error",
       stacktrace: error,
@@ -50,6 +52,7 @@ todoRouter.post("/", (req, res) => {
 
     res.status(201).json(newTodo);
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "Could not create a new todo",
       stacktrace: error,
@@ -78,4 +81,30 @@ todoRouter.delete("/:id", (req, res) => {
   }
 });
 
-todoRouter.put("/:id", (req, res) => {});
+todoRouter.put("/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const { todo }: { todo: Todo } = req.body;
+
+    if (+id !== todo.id) {
+      res.status(400).json({ message: "parameter and body does not match" });
+    } else {
+      let found = todos.find((t) => t.id === todo.id);
+
+      if (found) {
+        found.done = todo.done;
+        found.text = todo.text;
+
+        res.status(200).json(todo);
+      } else {
+        res.status(404).json({ message: "could not find the todo" });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "internal server error",
+      stacktrace: error,
+    } satisfies ApiErrorResponse);
+  }
+});
