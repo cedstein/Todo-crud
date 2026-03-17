@@ -1,5 +1,15 @@
 import type { Todo } from "../models/Todo";
 
+export const createTodo = async (text: string) => {
+  const response = await fetch("http://localhost3000/todos", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ todoText: text }),
+  });
+  const data: Todo = await response.json();
+  return data;
+};
+
 export const removeTodo = async (id: number) => {
   try {
     const response = await fetch("http://localhost:3000/todos/" + id, {
