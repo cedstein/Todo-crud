@@ -18,5 +18,4 @@ document.getElementById("todoform")?.addEventListener("submit", async (e) => {
 });
 const todos = await getTodos();
 
-// Rita ut dem på skärmen
 createHtml(todos);
