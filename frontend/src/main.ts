@@ -16,6 +16,9 @@ document.getElementById("todoform")?.addEventListener("submit", async (e) => {
   const todos = await getTodos();
   createHtml(todos);
 });
+
 const todos = await getTodos();
+
+console.log(todos);
 
 createHtml(todos);

@@ -2,7 +2,7 @@ import type { Todo } from "../models/Todo";
 
 export const getTodos = async () => {
   try {
-    const response = await fetch("http://localhost3000/todos");
+    const response = await fetch("http://localhost:3000/todos");
     const data: Todo[] = await response.json();
     return data;
   } catch {
@@ -12,13 +12,13 @@ export const getTodos = async () => {
 };
 
 export const getTodoById = async (id: number) => {
-  const response = await fetch("http://localhost3000/todos" + id);
+  const response = await fetch("http://localhost:3000/todos" + id);
   const data: Todo = await response.json();
   return data;
 };
 
 export const createTodo = async (text: string) => {
-  const response = await fetch("http://localhost3000/todos", {
+  const response = await fetch("http://localhost:3000/todos", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ todoText: text }),

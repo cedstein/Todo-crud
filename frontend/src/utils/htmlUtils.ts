@@ -2,7 +2,7 @@ import type { Todo } from "../models/Todo";
 import { getTodos, removeTodo, updateTodo } from "../services/todoService";
 
 export const createHtml = (todos: Todo[]) => {
-  const ul = document.getElementById("todoform");
+  const ul = document.getElementById("todos");
 
   if (ul) {
     ul.innerHTML = "";
@@ -42,12 +42,12 @@ export const createHtml = (todos: Todo[]) => {
       } else {
         console.error("Could not update todo");
       }
-
-      li.appendChild(span);
-      li.appendChild(toggleButton);
-      li.appendChild(removeButton);
-
-      ul?.appendChild(li);
     });
+
+    li.appendChild(span);
+    li.appendChild(toggleButton);
+    li.appendChild(removeButton);
+
+    ul?.appendChild(li);
   });
 };
