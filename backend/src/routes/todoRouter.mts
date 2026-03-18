@@ -46,11 +46,13 @@ todoRouter.post("/", (req, res) => {
   try {
     const { todoText } = req.body;
 
-    const newTodo = new Todo(Date.now(), todoText);
+    if (todoText) {
+      const newTodo = new Todo(Date.now(), todoText);
 
-    todos.push(newTodo);
+      todos.push(newTodo);
 
-    res.status(201).json(newTodo);
+      res.status(201).json(newTodo);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({

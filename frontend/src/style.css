@@ -294,3 +294,22 @@ code {
     border-right-color: var(--border);
   }
 }
+.done {
+  text-decoration: line-through;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+
+  li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    span {
+      width: 150px;
+    }
+  }
+}
