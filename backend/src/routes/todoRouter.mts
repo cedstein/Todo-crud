@@ -11,9 +11,11 @@ import {
 
 export const todoRouter = express.Router();
 
-todoRouter.get("/", async (_, res) => {
+todoRouter.get("/", async (req, res) => {
   try {
-    const todos = getTodos();
+    const { q, sort } = req.query;
+
+    const todos = getTodos(q, sort);
 
     res.status(200).json(todos);
   } catch (error) {
@@ -56,12 +58,9 @@ todoRouter.post("/", (req, res) => {
 
       res.status(201).json(newTodo);
     } else {
-      res
-        .status(400)
-        .json({
-          message:
-            "Body does not contain property todoText or an empty todoText",
-        });
+      res.status(400).json({
+        message: "Body does not contain property todoText or an empty todoText",
+      });
     }
   } catch (error) {
     console.error(error);

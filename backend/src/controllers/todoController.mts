@@ -1,3 +1,4 @@
+import type QueryString from "qs";
 import { Todo } from "../models/Todo.mjs";
 
 const todos: Todo[] = [
@@ -5,8 +6,40 @@ const todos: Todo[] = [
   new Todo(2, "learn routes"),
 ];
 
-export const getTodos = () => {
-  return todos;
+export const getTodos = (
+  q:
+    | string
+    | QueryString.ParsedQs
+    | (string | QueryString.ParsedQs)[]
+    | undefined,
+  sort:
+    | string
+    | QueryString.ParsedQs
+    | (string | QueryString.ParsedQs)[]
+    | undefined,
+) => {
+  let filteredList = [...todos];
+
+  if (q) {
+    filteredList = filteredList.filter((t) =>
+      t.text.toLowerCase().startsWith(q as string),
+    );
+  }
+
+  if ((sort as string) === "asc") {
+    filteredList.sort((a, b) => {
+      if (a.text.toLowerCase() < b.text.toLowerCase()) return -1;
+      if (b.text.toLowerCase() < a.text.toLowerCase()) return 1;
+      return 0;
+    });
+  } else {
+    filteredList.sort((a, b) => {
+      if (a.text.toLowerCase() < b.text.toLowerCase()) return 1;
+      if (b.text.toLowerCase() < a.text.toLowerCase()) return -1;
+      return 0;
+    });
+  }
+  return filteredList;
 };
 
 export const getTodo = (id: string) => todos.find((t) => t.id === +id);
