@@ -55,6 +55,13 @@ todoRouter.post("/", (req, res) => {
       const newTodo = createTodo(todoText);
 
       res.status(201).json(newTodo);
+    } else {
+      res
+        .status(400)
+        .json({
+          message:
+            "Body does not contain property todoText or an empty todoText",
+        });
     }
   } catch (error) {
     console.error(error);
