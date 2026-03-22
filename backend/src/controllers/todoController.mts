@@ -1,12 +1,8 @@
 import type QueryString from "qs";
+import { TodoModel } from "../models/TodoSchema.mjs";
 import { Todo } from "../models/Todo.mjs";
 
-const todos: Todo[] = [
-  new Todo(1, "learn express"),
-  new Todo(2, "learn routes"),
-];
-
-export const getTodos = (
+export const getTodos = async (
   q:
     | string
     | QueryString.ParsedQs
@@ -18,7 +14,11 @@ export const getTodos = (
     | (string | QueryString.ParsedQs)[]
     | undefined,
 ) => {
+  const todos = await TodoModel.find();
+
   let filteredList = [...todos];
+
+  console.log(filteredList);
 
   if (q) {
     filteredList = filteredList.filter((t) =>
@@ -42,32 +42,29 @@ export const getTodos = (
   return filteredList;
 };
 
-export const getTodo = (id: string) => todos.find((t) => t.id === +id);
+export const getTodo = async (id: string) =>
+  await TodoModel.findOne({ id: +id });
 
-export const createTodo = (text: string) => {
+export const createTodo = async (text: string) => {
   const newTodo = new Todo(Date.now(), text);
 
-  todos.push(newTodo);
+  const createdInMongo = await TodoModel.create(newTodo);
 
-  return newTodo;
+  return createdInMongo;
 };
 
-export const removeTodo = (id: string) => {
-  const index = todos.findIndex((t) => t.id === +id);
+export const removeTodo = async (id: string) => {
+  const removedObject = await TodoModel.findOneAndDelete({ id: +id });
 
-  if (index >= 0) {
-    todos.splice(index, 1);
+  if (removedObject) {
     return true;
   }
+
   return false;
 };
 
-export const updateTodo = (todo: Todo) => {
-  let found = todos.find((t) => t.id === todo.id);
+export const updateTodo = async (todo: Todo) => {
+  await TodoModel.findOneAndUpdate({ id: todo.id });
 
-  if (found) {
-    found.done = todo.done;
-    found.text = todo.text;
-  }
-  return found;
+  return todo;
 };
