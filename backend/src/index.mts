@@ -3,6 +3,7 @@ import { todoRouter } from "./routes/todoRouter.mjs";
 import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "dotenv";
+import { usersRouter } from "./routes/usersRouter.mjs";
 
 config();
 
@@ -24,6 +25,7 @@ app.use(
 );
 
 app.use("/todos", todoRouter);
+app.use("/users", usersRouter);
 
 app.listen(3000, async (error) => {
   try {
