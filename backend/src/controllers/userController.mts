@@ -47,7 +47,7 @@ export const addTodoToUser = async (userid: string, text: string) => {
   if (!foundUser) return false;
 
   const todoToAdd = {
-    id: Date.now,
+    id: Date.now(),
     text,
     done: false,
   };
