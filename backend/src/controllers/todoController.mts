@@ -1,6 +1,6 @@
 import type QueryString from "qs";
-import { TodoModel } from "../models/TodoSchema.mjs";
 import { Todo } from "../models/Todo.mjs";
+import { User } from "../models/UserSchema.mjs";
 
 export const getTodos = async (
   q:
@@ -14,7 +14,11 @@ export const getTodos = async (
     | (string | QueryString.ParsedQs)[]
     | undefined,
 ) => {
-  const todos = await TodoModel.find();
+  const user = await User.findOne();
+  if (!user) throw new Error("Could not find logged in user");
+
+  const todos = user.todos;
+  // const todos = await TodoModel.find();
 
   let filteredList = [...todos];
 
@@ -42,29 +46,60 @@ export const getTodos = async (
   return filteredList;
 };
 
-export const getTodo = async (id: string) =>
-  await TodoModel.findOne({ id: +id });
+export const getTodo = async (id: string) => {
+  const user = await User.findOne();
+  if (!user) throw new Error("Could not find logged in user");
+  return user.todos.find((t) => t.id === +id);
+};
 
 export const createTodo = async (text: string) => {
+  const user = await User.findOne();
+  if (!user) throw new Error("Could not find logged in user");
+
   const newTodo = new Todo(Date.now(), text);
+  user.todos.push({ id: newTodo.id, text: newTodo.text, done: newTodo.done });
+  await user.save();
+
+  return newTodo;
+  /*  const newTodo = new Todo(Date.now(), text);
 
   const createdInMongo = await TodoModel.create(newTodo);
 
-  return createdInMongo;
+  return createdInMongo; */
 };
 
 export const removeTodo = async (id: string) => {
-  const removedObject = await TodoModel.findOneAndDelete({ id: +id });
+  const user = await User.findOne();
+  if (!user) throw new Error("Could not find logged in user");
+
+  const index = user.todos.findIndex((t) => t.id === +id);
+  if (index === -1) return false;
+
+  user.todos.splice(index, 1);
+  await user.save();
+  return true;
+  /*  const removedObject = await TodoModel.findOneAndDelete({ id: +id });
 
   if (removedObject) {
     return true;
   }
 
-  return false;
+  return false; */
 };
 
 export const updateTodo = async (todo: Todo) => {
-  await TodoModel.findOneAndUpdate({ id: todo.id });
+  const user = await User.findOne();
+  if (!user) throw new Error("Could not find logged in user");
+
+  const existing = user.todos.find((t) => t.id === todo.id);
+  if (!existing) throw new Error("Todo not found");
+
+  existing.text = todo.text;
+  existing.done = todo.done;
+  await user.save();
 
   return todo;
+  /* await TodoModel.findOneAndUpdate({ id: todo.id });
+
+  return todo; */
 };

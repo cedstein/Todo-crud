@@ -1,24 +1,11 @@
 import type { TodoDTO } from "../models/DTO/TodoDTO.mjs";
 import type { UserDTO } from "../models/DTO/UserDTO.mjs";
-import { User } from "../models/UserSchema.mjs";
+import { convertDbUserToDto, User } from "../models/UserSchema.mjs";
 
 export const getUsers = async () => {
   const usersFromDb = await User.find();
 
-  const dtos = usersFromDb.map((userFromDb) => {
-    return {
-      id: userFromDb.id,
-      name: userFromDb.name,
-      todos: userFromDb.todos.map((t) => {
-        return {
-          id: t.id,
-          text: t.text,
-          done: t.done,
-        } satisfies TodoDTO;
-      }),
-    } satisfies UserDTO;
-  });
-  return dtos;
+  return usersFromDb.map((userFromDb) => convertDbUserToDto(userFromDb));
 };
 
 export const createUser = async (name: string, email: string) => {
@@ -29,17 +16,11 @@ export const createUser = async (name: string, email: string) => {
     todos: [],
   };
   const createdUser = await User.create(theNewUser);
-  return {
-    id: createdUser.id,
-    name: createdUser.name,
-    todos: createdUser.todos.map((t) => {
-      return {
-        id: t.id,
-        text: t.text,
-        done: t.done,
-      } satisfies TodoDTO;
-    }),
-  } satisfies UserDTO;
+  return convertDbUserToDto(createdUser);
+};
+
+export const getUser = async (userid: string) => {
+  return await User.findOne({ id: +userid });
 };
 
 export const addTodoToUser = async (userid: string, text: string) => {
@@ -55,4 +36,14 @@ export const addTodoToUser = async (userid: string, text: string) => {
   await foundUser.save();
 
   return true;
+};
+
+export const removeUser = async (userid: string) => {
+  const removedUser = await User.findOneAndDelete({ id: +userid });
+
+  if (removedUser) {
+    return true;
+  }
+
+  return false;
 };

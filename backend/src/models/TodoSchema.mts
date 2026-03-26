@@ -6,4 +6,4 @@ export const todoSchema = new Schema({
   done: { type: Boolean, required: true },
 });
 
-export const TodoModel = model("todo", todoSchema);
+// export const TodoModel = model("todo", todoSchema);
