@@ -10,50 +10,6 @@ import {
 
 export const usersRouter = express.Router();
 
-usersRouter.get("/", async (req, res) => {
-  try {
-    const users: UserDTO[] = await getUsers();
-
-    res.status(200).json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
-  }
-});
-
-usersRouter.get("/:userid", async (req, res) => {
-  try {
-    const { userid } = req.params;
-    const foundUser = await getUser(userid);
-
-    if (foundUser) {
-      res.status(200).json(foundUser);
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
-  }
-});
-
-usersRouter.post("/", async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    if (!name || "") {
-      res.status(400).json({ message: "Name is missing in body" });
-      return;
-    }
-
-    const newUser: UserDTO = await createUser(name, email);
-
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
-  }
-});
-
 usersRouter.put("/addtodo/:userid", async (req, res) => {
   try {
     const { userid } = req.params;

@@ -15,7 +15,7 @@ todoRouter.get("/", async (req, res) => {
   try {
     const { q, sort } = req.query;
 
-    const todos = await getTodos(q, sort);
+    const todos = await getTodos(q, sort, req);
 
     res.status(200).json(todos);
   } catch (error) {
@@ -31,7 +31,7 @@ todoRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const found = await getTodo(id);
+    const found = await getTodo(id, req);
 
     if (found) {
       res.status(200).json(found);
@@ -54,7 +54,7 @@ todoRouter.post("/", async (req, res) => {
     const { todoText }: { todoText: string } = req.body;
 
     if (todoText && todoText !== "") {
-      const newTodo = await createTodo(todoText);
+      const newTodo = await createTodo(todoText, req);
 
       res.status(201).json(newTodo);
     } else {
@@ -75,7 +75,7 @@ todoRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const success = await removeTodo(id);
+    const success = await removeTodo(id, req);
 
     if (success) {
       res.status(204).json();
@@ -99,7 +99,7 @@ todoRouter.put("/:id", async (req, res) => {
     if (+id !== todo.id) {
       res.status(400).json({ message: "parameter and body does not match" });
     } else {
-      let found = await updateTodo(todo);
+      let found = await updateTodo(todo, req);
 
       if (found) {
         res.status(200).json(todo);

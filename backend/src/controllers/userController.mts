@@ -8,15 +8,20 @@ export const getUsers = async () => {
   return usersFromDb.map((userFromDb) => convertDbUserToDto(userFromDb));
 };
 
-export const createUser = async (name: string, email: string) => {
+export const createUser = async (
+  name: string,
+  email: string,
+  password: string,
+) => {
   const theNewUser = {
     id: Date.now(),
     name,
     email,
+    password,
     todos: [],
   };
   const createdUser = await User.create(theNewUser);
-  return convertDbUserToDto(createdUser);
+  return /* convertDbUserToDto */ createdUser;
 };
 
 export const getUser = async (userid: string) => {

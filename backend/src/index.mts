@@ -4,6 +4,9 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import { usersRouter } from "./routes/usersRouter.mjs";
+import { secretRouter } from "./routes/secretRouter.mjs";
+import { auth } from "./middlewares/auth.mjs";
+import { registerRouter } from "./routes/registerRouter.mjs";
 
 config();
 
@@ -26,6 +29,10 @@ app.use(
 
 app.use("/todos", todoRouter);
 app.use("/users", usersRouter);
+
+app.use("/register", registerRouter);
+
+app.use("/secret", auth, secretRouter);
 
 app.listen(3000, async (error) => {
   try {
